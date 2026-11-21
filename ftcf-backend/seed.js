@@ -44,7 +44,8 @@ async function seed() {
     { name: 'Dr. Sana Zafar',     email: 'sana.zafar@lnmiit.ac.in',     password: 'faculty123', role: 'faculty', department: 'Chemistry', designation: 'Lecturer', avatar: 'SZ', totalCredits: 44, requiredCredits: 40 },
   ];
 
-  const users = await User.insertMany(usersRaw);
+  // Use create() so the pre-save hook hashes passwords
+  const users = await Promise.all(usersRaw.map(u => User.create(u)));
   const userMap = {};
   users.forEach((u) => { userMap[u.email] = u; });
   console.log(`👤  Seeded ${users.length} users`);
